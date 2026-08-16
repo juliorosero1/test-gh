@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Arcade Zone</title>
+    <!-- Importamos una fuente pixelada de Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #111;
+            --neon-blue: #00f3ff;
+            --neon-pink: #ff00ff;
+            --neon-green: #0aff00;
+            --screen-bg: #000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Efecto CRT (Monitor Viejo) */
+        .crt-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            text-shadow: 4px 4px var(--neon-pink);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--neon-blue);
+            margin-bottom: 10px;
+            animation: flicker 2s infinite;
+        }
+
+        /* Contenedor del Juego Activo */
+        .arcade-cabinet {
+            border: 4px solid var(--neon-green);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px var(--neon-green);
+            margin-bottom: 40px;
+            background: #222;
+            position: relative;
+        }
+
+        canvas {
+            background-color: var(--screen-bg);
+            border: 2px solid #333;
+            display: block;
+            max-width: 100%;
+        }
+
+        .controls-info {
+            margin-top: 15px;
+            font-size: 0.7rem;
+            color: #aaa;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .btn-start {
+            background: var(--neon-pink);
+            border: none;
+            padding: 15px 30px;
+            color: white;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 10px;
+            text-transform: uppercase;
+            box-shadow: 4px 4px 0px #fff;
+            transition: transform 0.1s;
+        }
+
+        .btn-start:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #fff;
+        }
+
+        /* Galería de Juegos Clásicos */
+        .gallery-title {
+            color: var(--neon-green);
+            margin-bottom: 20px;
+            text-decoration: underline;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            width: 90%;
+            max-width: 1000px;
+            padding-bottom: 50px;
+        }
+
+        .game-card {
+            background: #1a1a1a;
+            border: 2px solid #444;
+            padding: 15px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .game-card:hover {
+            border-color: var(--neon-blue);
+            transform: translateY(-5px);
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        .game-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .game-title {
+            color: var(--neon-blue);
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .game-desc {
+            font-size: 0.6rem;
+            color: #ccc;
+            line-height: 1.4;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.5rem; }
+            canvas { width: 100%; height: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="crt-overlay"></div>
+
+    <header>
+        <h1>ARCADE ZONE</h1>
+        <p>INSERT COIN TO PLAY</p>
+    </header>
+
+    <!-- Sección del Juego Jugable -->
+    <section class="arcade-cabinet">
+        <h2 style="text-align:center; margin-bottom:10px; color:#fff;">NEON BREAKER</h2>
+        <canvas id="gameCanvas" width="600" height="400"></canvas>
+        
+        <div style="text-align: center;">
+            <p id="scoreBoard" style="margin-top:10px; color:var(--neon-green)">SCORE: 0</p>
+            <button class="btn-start" onclick="startGame()">START GAME</button>
+        </div>
+        
+        <div class="controls-info">
+            CONTROLES: FLECHAS IZQUIERDA / DERECHA o MOUSE<br>
+            OBJETIVO: DESTRUYE TODOS LOS BLOQUES
+        </div>
+    </section>
+
+    <!-- Catálogo Visual -->
+    <h2 class="gallery-title">CLÁSICOS INOLVIDABLES</h2>
+    <section class="games-grid">
+        <div class="game-card">
+            <div class="game-icon">👾</div>
+            <h3 class="game-title">SPACE INVADERS</h3>
+            <p class="game-desc">Defiende la tierra de oleadas de alienígenas descendentes.</p>
+        </div>
+        <div class="game-card">
+            <div class="game-icon">🟡</div>
+            <h3 class="game-title">PAC-MAN</h3>
+            <p class="game-desc">Come todos los puntos y evita a los fantasmas en el laberinto.</p>
+        </div>
+        <div class="game-card">
+            <div class="game-icon">🦍</div>
+            <h3 class="game-title">DONKEY KONG</h3>
+            <p class="game-desc">Salta barriles y sube escaleras para rescatar a la princesa.</p>
+        </div>
+        <div class="game-card">
+            <div class="game-icon">🐸</div>
+            <h3 class="game-title">FROGGER</h3>
+            <p class="game-desc">Cruza la carretera y el río sin ser atropellado o ahogado.</p>
+        </div>
+        <div class="game-card">
+            <div class="game-icon">🚀</div>
+            <h3 class="game-title">GALAGA</h3>
+            <p class="game-desc">Disparos espaciales rápidos contra formaciones enemigas.</p>
+        </div>
+        <div class="game-card">
+            <div class="game-icon">🧱</div>
+            <h3 class="game-title">TETRIS</h3>
+            <p class="game-desc">Encaja las piezas que caen para completar líneas.</p>
+        </div>
+    </section>
+
+    <script>
+        // --- LÓGICA DEL JUEGO (BREAKOUT CLONE) ---
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        const scoreEl = document.getElementById("scoreBoard");
+
+        let ballRadius = 8;
+        let x, y, dx, dy;
+        let paddleHeight = 15;
+        let paddleWidth = 100;
+        let paddleX;
+        let rightPressed = false;
+        let leftPressed = false;
+        let brickRowCount = 5;
+        let brickColumnCount = 7;
+        let brickWidth = 70;
+        let brickHeight = 20;
+        let brickPadding = 10;
+        let brickOffsetTop = 40;
+        let brickOffsetLeft = 25;
+        let bricks = [];
+        let score = 0;
+        let gameRunning = false;
+        let animationId;
+
+        // Inicializar ladrillos
+        function initBricks() {
+            bricks = [];
+            for(let c=0; c<brickColumnCount; c++) {
+                bricks[c] = [];
+                for(let r=0; r<brickRowCount; r++) {
+                    bricks[c][r] = { x: 0, y: 0, status: 1 };
+                }
+            }
+        }
+
+        // Resetear variables
+        function resetGame() {
+            x = canvas.width / 2;
+            y = canvas.height - 30;
+            dx = 4;
+            dy = -4;
+            paddleX = (canvas.width - paddleWidth) / 2;
+            score = 0;
+            scoreEl.innerText = "SCORE: " + score;
+            initBricks();
+        }
+
+        // Controles Teclado
+        document.addEventListener("keydown", keyDownHandler, false);
+        document.addEventListener("keyup", keyUpHandler, false);
+        // Control Mouse
+        document.addEventListener("mousemove", mouseMoveHandler, false);
+
+        function keyDownHandler(e) {
+            if(e.key == "Right" || e.key == "ArrowRight") rightPressed = true;
+            else if(e.key == "Left" || e.key == "ArrowLeft") leftPressed = true;
+        }
+
+        function keyUpHandler(e) {
+            if(e.key == "Right" || e.key == "ArrowRight") rightPressed = false;
+            else if(e.key == "Left" || e.key == "ArrowLeft") leftPressed = false;
+        }
+
+        function mouseMoveHandler(e) {
+            const relativeX = e.clientX - canvas.offsetLeft;
+            if(relativeX > 0 && relativeX < canvas.width) {
+                paddleX = relativeX - paddleWidth / 2;
+            }
+        }
+
+        function collisionDetection() {
+            for(let c=0; c<brickColumnCount; c++) {
+                for(let r=0; r<brickRowCount; r++) {
+                    let b = bricks[c][r];
+                    if(b.status == 1) {
+                        if(x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
+                            dy = -dy;
+                            b.status = 0;
+                            score += 10;
+                            scoreEl.innerText = "SCORE: " + score;
+                            
+                            // Aumentar velocidad ligeramente
+                            if(score % 50 === 0) {
+                                dx = dx > 0 ? dx + 0.5 : dx - 0.5;
+                                dy = dy > 0 ? dy + 0.5 : dy - 0.5;
+                            }
+
+                            if(score == brickRowCount * brickColumnCount * 10) {
+                                alert("¡GANASTE! NIVEL COMPLETADO");
+                                document.location.reload();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function drawBall() {
+            ctx.beginPath();
+            ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+            ctx.fillStyle = "#00f3ff";
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function drawPaddle() {
+            ctx.beginPath();
+            ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
+            ctx.fillStyle = "#ff00ff";
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "#ff00ff";
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.closePath();
+        }
+
+        function drawBricks() {
+            for(let c=0; c<brickColumnCount; c++) {
+                for(let r=0; r<brickRowCount; r++) {
+                    if(bricks[c][r].status == 1) {
+                        let brickX = (c*(brickWidth+brickPadding)) + brickOffsetLeft;
+                        let brickY = (r*(brickHeight+brickPadding)) + brickOffsetTop;
+                        bricks[c][r].x = brickX;
+                        bricks[c][r].y = brickY;
+                        ctx.beginPath();
+                        ctx.rect(brickX, brickY, brickWidth, brickHeight);
+                        // Colores por fila
+                        let colors = ["#ff0000", "#ff7f00", "#ffff00", "#00ff00", "#0000ff"];
+                        ctx.fillStyle = colors[r];
+                        ctx.fill();
+                        ctx.closePath();
+                    }
+                }
+            }
+        }
+
+        function draw() {
+            if(!gameRunning) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBricks();
+            drawBall();
+            drawPaddle();
+            collisionDetection();
+
+            if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
+                dx = -dx;
+            }
+            if(y + dy < ballRadius) {
+                dy = -dy;
+            } else if(y + dy > canvas.height-ballRadius) {
+                if(x > paddleX && x < paddleX + paddleWidth) {
+                    // Rebote con efecto según donde golpee la paleta
+                    let hitPoint = x - (paddleX + paddleWidth/2);
+                    dx = hitPoint * 0.15; 
+                    dy = -Math.abs(dy); // Asegurar que suba
+                } else {
+                    gameRunning = false;
+                    alert("GAME OVER - SCORE FINAL: " + score);
+                    resetGame();
+                    draw(); // Dibujar estado inicial
+                    return;
+                }
+            }
+
+            x += dx;
+            y += dy;
+
+            if(rightPressed && paddleX < canvas.width-paddleWidth) {
+                paddleX += 7;
+            }
+            else if(leftPressed && paddleX > 0) {
+                paddleX -= 7;
+            }
+
+            animationId = requestAnimationFrame(draw);
+        }
+
+        function startGame() {
+            if(gameRunning) return;
+            resetGame();
+            gameRunning = true;
+            draw();
+            canvas.focus();
+        }
+
+        // Dibujar pantalla inicial
+        resetGame();
+        drawBricks();
+        drawPaddle();
+        ctx.font = "20px 'Press Start 2P'";
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
+        ctx.fillText("PRESS START", canvas.width/2, canvas.height/2);
+
+    </script>
+</body>
+</html>
