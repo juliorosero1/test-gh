@@ -2,7 +2,7 @@ name: Deploy to DockerHub
 
 on:
   push:
-    branches: [main] # ⚠️ Cambia a tu rama principal si no es 'main'
+    branches: [master] # ⚠️ Cambia a tu rama principal si no es 'main'
 
 jobs:
   deploy:
