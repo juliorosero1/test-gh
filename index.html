@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retro Arcade Zone</title>
-    <!-- Importamos una fuente pixelada de Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <title>Retro Arcade & PS1 Zone</title>
+    <!-- Fuentes: Pixelada para Arcade y Sans-serif limpia para PS1 -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -13,14 +13,12 @@
             --neon-blue: #00f3ff;
             --neon-pink: #ff00ff;
             --neon-green: #0aff00;
-            --screen-bg: #000;
+            --ps1-gray: #2a2a2a;
+            --ps1-light: #dcdcdc;
+            --ps1-accent: #e60012; /* Rojo PlayStation */
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             background-color: var(--bg-color);
@@ -33,132 +31,78 @@
             overflow-x: hidden;
         }
 
-        /* Efecto CRT (Monitor Viejo) */
+        /* Efecto CRT (Monitor Viejo) - Solo afecta visualmente, no interfiere */
         .crt-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
             background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
-            z-index: 999;
+            pointer-events: none; z-index: 999;
         }
 
-        header {
-            text-align: center;
-            padding: 40px 20px;
-            text-shadow: 4px 4px var(--neon-pink);
-        }
+        header { text-align: center; padding: 40px 20px; text-shadow: 4px 4px var(--neon-pink); }
+        h1 { font-size: 2.5rem; color: var(--neon-blue); margin-bottom: 10px; animation: flicker 2s infinite; }
 
-        h1 {
-            font-size: 2.5rem;
-            color: var(--neon-blue);
-            margin-bottom: 10px;
-            animation: flicker 2s infinite;
-        }
-
-        /* Contenedor del Juego Activo */
+        /* --- SECCIÓN ARCADE --- */
         .arcade-cabinet {
-            border: 4px solid var(--neon-green);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px var(--neon-green);
-            margin-bottom: 40px;
-            background: #222;
-            position: relative;
+            border: 4px solid var(--neon-green); padding: 20px; border-radius: 10px;
+            box-shadow: 0 0 20px var(--neon-green); margin-bottom: 50px; background: #222;
         }
-
-        canvas {
-            background-color: var(--screen-bg);
-            border: 2px solid #333;
-            display: block;
-            max-width: 100%;
-        }
-
-        .controls-info {
-            margin-top: 15px;
-            font-size: 0.7rem;
-            color: #aaa;
-            text-align: center;
-            line-height: 1.5;
-        }
-
+        canvas { background-color: #000; border: 2px solid #333; display: block; max-width: 100%; }
+        .controls-info { margin-top: 15px; font-size: 0.7rem; color: #aaa; text-align: center; line-height: 1.5; }
         .btn-start {
-            background: var(--neon-pink);
-            border: none;
-            padding: 15px 30px;
-            color: white;
-            font-family: inherit;
-            font-size: 1rem;
-            cursor: pointer;
-            margin-top: 10px;
-            text-transform: uppercase;
-            box-shadow: 4px 4px 0px #fff;
-            transition: transform 0.1s;
+            background: var(--neon-pink); border: none; padding: 15px 30px; color: white;
+            font-family: inherit; font-size: 1rem; cursor: pointer; margin-top: 10px;
+            box-shadow: 4px 4px 0px #fff; transition: transform 0.1s;
         }
+        .btn-start:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #fff; }
 
-        .btn-start:active {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px #fff;
+        /* --- TÍTULOS DE SECCIÓN --- */
+        .section-title { margin: 40px 0 20px; text-decoration: underline; text-align: center; }
+        .arcade-title { color: var(--neon-green); }
+        
+        /* --- SECCIÓN PS1 (Estilo Diferente) --- */
+        .ps1-container {
+            width: 90%; max-width: 1100px; background: var(--ps1-gray);
+            border-top: 4px solid var(--ps1-accent); border-bottom: 4px solid var(--ps1-accent);
+            padding: 30px; margin-bottom: 50px; border-radius: 8px;
+            font-family: 'Rajdhani', sans-serif; /* Fuente más moderna/limpia */
         }
-
-        /* Galería de Juegos Clásicos */
-        .gallery-title {
-            color: var(--neon-green);
-            margin-bottom: 20px;
-            text-decoration: underline;
+        .ps1-header {
+            text-align: center; color: var(--ps1-light); margin-bottom: 25px;
+            letter-spacing: 2px; text-transform: uppercase; font-weight: 700;
         }
+        .ps1-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;
+        }
+        .ps1-card {
+            background: #1a1a1a; border: 1px solid #444; padding: 15px;
+            transition: 0.3s; position: relative; overflow: hidden;
+        }
+        .ps1-card:hover { border-color: var(--ps1-accent); transform: scale(1.03); }
+        .ps1-card::before {
+            content: "PS1"; position: absolute; top: 5px; right: 5px;
+            font-size: 0.6rem; color: #555; font-weight: bold;
+        }
+        .ps1-icon { font-size: 2.5rem; margin-bottom: 10px; display: block; text-align: center; }
+        .ps1-title { color: var(--ps1-light); font-size: 1.1rem; margin-bottom: 8px; font-weight: 700; }
+        .ps1-desc { font-size: 0.85rem; color: #bbb; line-height: 1.4; }
 
+        /* --- GALERÍA ARCADE --- */
         .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            width: 90%;
-            max-width: 1000px;
-            padding-bottom: 50px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px; width: 90%; max-width: 1000px; padding-bottom: 50px;
         }
-
         .game-card {
-            background: #1a1a1a;
-            border: 2px solid #444;
-            padding: 15px;
-            text-align: center;
-            transition: 0.3s;
+            background: #1a1a1a; border: 2px solid #444; padding: 15px; text-align: center; transition: 0.3s;
         }
+        .game-card:hover { border-color: var(--neon-blue); transform: translateY(-5px); box-shadow: 0 0 15px var(--neon-blue); }
+        .game-icon { font-size: 3rem; margin-bottom: 15px; }
+        .game-title { color: var(--neon-blue); margin-bottom: 10px; font-size: 0.9rem; }
+        .game-desc { font-size: 0.6rem; color: #ccc; line-height: 1.4; }
 
-        .game-card:hover {
-            border-color: var(--neon-blue);
-            transform: translateY(-5px);
-            box-shadow: 0 0 15px var(--neon-blue);
-        }
-
-        .game-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-        }
-
-        .game-title {
-            color: var(--neon-blue);
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-        }
-
-        .game-desc {
-            font-size: 0.6rem;
-            color: #ccc;
-            line-height: 1.4;
-        }
-
-        @keyframes flicker {
-            0% { opacity: 1; }
-            50% { opacity: 0.8; }
-            100% { opacity: 1; }
-        }
-
-        /* Responsive */
-        @media (max-width: 600px) {
-            h1 { font-size: 1.5rem; }
-            canvas { width: 100%; height: auto; }
-        }
+        @keyframes flicker { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
+        @media (max-width: 600px) { h1 { font-size: 1.5rem; } canvas { width: 100%; height: auto; } }
     </style>
 </head>
 <body>
@@ -166,193 +110,116 @@
     <div class="crt-overlay"></div>
 
     <header>
-        <h1>ARCADE ZONE</h1>
-        <p>INSERT COIN TO PLAY</p>
+        <h1>RETRO ZONE</h1>
+        <p>ARCADE & PLAYSTATION CLASSICS</p>
     </header>
 
-    <!-- Sección del Juego Jugable -->
+    <!-- JUEGO JUGABLE (ARCADE) -->
     <section class="arcade-cabinet">
         <h2 style="text-align:center; margin-bottom:10px; color:#fff;">NEON BREAKER</h2>
         <canvas id="gameCanvas" width="600" height="400"></canvas>
-        
         <div style="text-align: center;">
             <p id="scoreBoard" style="margin-top:10px; color:var(--neon-green)">SCORE: 0</p>
             <button class="btn-start" onclick="startGame()">START GAME</button>
         </div>
-        
-        <div class="controls-info">
-            CONTROLES: FLECHAS IZQUIERDA / DERECHA o MOUSE<br>
-            OBJETIVO: DESTRUYE TODOS LOS BLOQUES
-        </div>
+        <div class="controls-info">CONTROLES: FLECHAS / MOUSE | OBJETIVO: ROMPER BLOQUES</div>
     </section>
 
-    <!-- Catálogo Visual -->
-    <h2 class="gallery-title">CLÁSICOS INOLVIDABLES</h2>
+    <!-- CATÁLOGO ARCADE -->
+    <h2 class="section-title arcade-title">CLÁSICOS DE MÁQUINA</h2>
     <section class="games-grid">
-        <div class="game-card">
-            <div class="game-icon">👾</div>
-            <h3 class="game-title">SPACE INVADERS</h3>
-            <p class="game-desc">Defiende la tierra de oleadas de alienígenas descendentes.</p>
-        </div>
-        <div class="game-card">
-            <div class="game-icon">🟡</div>
-            <h3 class="game-title">PAC-MAN</h3>
-            <p class="game-desc">Come todos los puntos y evita a los fantasmas en el laberinto.</p>
-        </div>
-        <div class="game-card">
-            <div class="game-icon">🦍</div>
-            <h3 class="game-title">DONKEY KONG</h3>
-            <p class="game-desc">Salta barriles y sube escaleras para rescatar a la princesa.</p>
-        </div>
-        <div class="game-card">
-            <div class="game-icon">🐸</div>
-            <h3 class="game-title">FROGGER</h3>
-            <p class="game-desc">Cruza la carretera y el río sin ser atropellado o ahogado.</p>
-        </div>
-        <div class="game-card">
-            <div class="game-icon">🚀</div>
-            <h3 class="game-title">GALAGA</h3>
-            <p class="game-desc">Disparos espaciales rápidos contra formaciones enemigas.</p>
-        </div>
-        <div class="game-card">
-            <div class="game-icon">🧱</div>
-            <h3 class="game-title">TETRIS</h3>
-            <p class="game-desc">Encaja las piezas que caen para completar líneas.</p>
-        </div>
+        <div class="game-card"><div class="game-icon">👾</div><h3 class="game-title">SPACE INVADERS</h3><p class="game-desc">Defiende la tierra de oleadas alienígenas.</p></div>
+        <div class="game-card"><div class="game-icon">🟡</div><h3 class="game-title">PAC-MAN</h3><p class="game-desc">Come puntos y evita fantasmas.</p></div>
+        <div class="game-card"><div class="game-icon">🦍</div><h3 class="game-title">DONKEY KONG</h3><p class="game-desc">Salta barriles y salva a la princesa.</p></div>
+        <div class="game-card"><div class="game-icon">🐸</div><h3 class="game-title">FROGGER</h3><p class="game-desc">Cruza la carretera sin ser atropellado.</p></div>
     </section>
+
+    <!-- CATÁLOGO PS1 -->
+    <div class="ps1-container">
+        <h2 class="ps1-header">★ Leyendas de PlayStation 1 ★</h2>
+        <div class="ps1-grid">
+            <div class="ps1-card">
+                <span class="ps1-icon">⚔️</span>
+                <div class="ps1-title">Final Fantasy VII</div>
+                <p class="ps1-desc">La épica aventura de Cloud Strife contra Shinra y Sephiroth. Definición del JRPG moderno.</p>
+            </div>
+            <div class="ps1-card">
+                <span class="ps1-icon">🧛</span>
+                <div class="ps1-title">Castlevania: SOTN</div>
+                <p class="ps1-desc">Symphony of the Night. Exploración gótica, mapa invertido y la mejor banda sonora de 16-bits+.</p>
+            </div>
+            <div class="ps1-card">
+                <span class="ps1-icon">🏎️</span>
+                <div class="ps1-title">Crash Team Racing</div>
+                <p class="ps1-desc">El karting definitivo de PS1. Drift, turbo y modos de batalla inolvidables.</p>
+            </div>
+            <div class="ps1-card">
+                <span class="ps1-icon">🥷</span>
+                <div class="ps1-title">Metal Gear Solid</div>
+                <p class="ps1-desc">Sigilo táctico, narrativa cinematográfica y jefes que rompieron la cuarta pared.</p>
+            </div>
+            <div class="ps1-card">
+                <span class="ps1-icon"></span>
+                <div class="ps1-title">Resident Evil 2</div>
+                <p class="ps1-desc">Survival horror puro. Raccoon City, Leon, Claire y la tensión de cada munición contada.</p>
+            </div>
+            <div class="ps1-card">
+                <span class="ps1-icon">🐉</span>
+                <div class="ps1-title">Spyro the Dragon</div>
+                <p class="ps1-desc">Plataformas 3D coloridas, mundos abiertos y la colección que marcó una generación.</p>
+            </div>
+            <div class="ps1-card">
+                <span class="ps1-icon">🏃</span>
+                <div class="ps1-title">Tekken 3</div>
+                <p class="ps1-desc">El rey de la lucha 3D en consolas. Roster legendario y mecánicas pulidas al milímetro.</p>
+            </div>
+            <div class="ps1-card">
+                <span class="ps1-icon">🔫</span>
+                <div class="ps1-title">Silent Hill</div>
+                <p class="ps1-desc">Terror psicológico, niebla densa y una historia que se mete bajo la piel.</p>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // --- LÓGICA DEL JUEGO (BREAKOUT CLONE) ---
+        // --- LÓGICA DEL JUEGO (BREAKOUT) ---
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
         const scoreEl = document.getElementById("scoreBoard");
 
-        let ballRadius = 8;
-        let x, y, dx, dy;
-        let paddleHeight = 15;
-        let paddleWidth = 100;
-        let paddleX;
-        let rightPressed = false;
-        let leftPressed = false;
-        let brickRowCount = 5;
-        let brickColumnCount = 7;
-        let brickWidth = 70;
-        let brickHeight = 20;
-        let brickPadding = 10;
-        let brickOffsetTop = 40;
-        let brickOffsetLeft = 25;
-        let bricks = [];
-        let score = 0;
-        let gameRunning = false;
-        let animationId;
+        let ballRadius = 8, x, y, dx, dy;
+        let paddleHeight = 15, paddleWidth = 100, paddleX;
+        let rightPressed = false, leftPressed = false;
+        let brickRowCount = 5, brickColumnCount = 7, brickWidth = 70, brickHeight = 20;
+        let brickPadding = 10, brickOffsetTop = 40, brickOffsetLeft = 25;
+        let bricks = [], score = 0, gameRunning = false;
 
-        // Inicializar ladrillos
         function initBricks() {
             bricks = [];
             for(let c=0; c<brickColumnCount; c++) {
                 bricks[c] = [];
-                for(let r=0; r<brickRowCount; r++) {
-                    bricks[c][r] = { x: 0, y: 0, status: 1 };
-                }
+                for(let r=0; r<brickRowCount; r++) bricks[c][r] = { x: 0, y: 0, status: 1 };
             }
         }
 
-        // Resetear variables
         function resetGame() {
-            x = canvas.width / 2;
-            y = canvas.height - 30;
-            dx = 4;
-            dy = -4;
-            paddleX = (canvas.width - paddleWidth) / 2;
-            score = 0;
-            scoreEl.innerText = "SCORE: " + score;
-            initBricks();
+            x = canvas.width / 2; y = canvas.height - 30; dx = 4; dy = -4;
+            paddleX = (canvas.width - paddleWidth) / 2; score = 0;
+            scoreEl.innerText = "SCORE: " + score; initBricks();
         }
 
-        // Controles Teclado
-        document.addEventListener("keydown", keyDownHandler, false);
-        document.addEventListener("keyup", keyUpHandler, false);
-        // Control Mouse
-        document.addEventListener("mousemove", mouseMoveHandler, false);
-
-        function keyDownHandler(e) {
-            if(e.key == "Right" || e.key == "ArrowRight") rightPressed = true;
-            else if(e.key == "Left" || e.key == "ArrowLeft") leftPressed = true;
-        }
-
-        function keyUpHandler(e) {
-            if(e.key == "Right" || e.key == "ArrowRight") rightPressed = false;
-            else if(e.key == "Left" || e.key == "ArrowLeft") leftPressed = false;
-        }
-
-        function mouseMoveHandler(e) {
-            const relativeX = e.clientX - canvas.offsetLeft;
-            if(relativeX > 0 && relativeX < canvas.width) {
-                paddleX = relativeX - paddleWidth / 2;
-            }
-        }
+        document.addEventListener("keydown", e => { if(e.key.includes("Right")) rightPressed=true; if(e.key.includes("Left")) leftPressed=true; });
+        document.addEventListener("keyup", e => { if(e.key.includes("Right")) rightPressed=false; if(e.key.includes("Left")) leftPressed=false; });
+        document.addEventListener("mousemove", e => { const rel = e.clientX - canvas.offsetLeft; if(rel>0 && rel<canvas.width) paddleX = rel - paddleWidth/2; });
 
         function collisionDetection() {
             for(let c=0; c<brickColumnCount; c++) {
                 for(let r=0; r<brickRowCount; r++) {
                     let b = bricks[c][r];
-                    if(b.status == 1) {
-                        if(x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
-                            dy = -dy;
-                            b.status = 0;
-                            score += 10;
-                            scoreEl.innerText = "SCORE: " + score;
-                            
-                            // Aumentar velocidad ligeramente
-                            if(score % 50 === 0) {
-                                dx = dx > 0 ? dx + 0.5 : dx - 0.5;
-                                dy = dy > 0 ? dy + 0.5 : dy - 0.5;
-                            }
-
-                            if(score == brickRowCount * brickColumnCount * 10) {
-                                alert("¡GANASTE! NIVEL COMPLETADO");
-                                document.location.reload();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        function drawBall() {
-            ctx.beginPath();
-            ctx.arc(x, y, ballRadius, 0, Math.PI*2);
-            ctx.fillStyle = "#00f3ff";
-            ctx.fill();
-            ctx.closePath();
-        }
-
-        function drawPaddle() {
-            ctx.beginPath();
-            ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
-            ctx.fillStyle = "#ff00ff";
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = "#ff00ff";
-            ctx.fill();
-            ctx.shadowBlur = 0;
-            ctx.closePath();
-        }
-
-        function drawBricks() {
-            for(let c=0; c<brickColumnCount; c++) {
-                for(let r=0; r<brickRowCount; r++) {
-                    if(bricks[c][r].status == 1) {
-                        let brickX = (c*(brickWidth+brickPadding)) + brickOffsetLeft;
-                        let brickY = (r*(brickHeight+brickPadding)) + brickOffsetTop;
-                        bricks[c][r].x = brickX;
-                        bricks[c][r].y = brickY;
-                        ctx.beginPath();
-                        ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                        // Colores por fila
-                        let colors = ["#ff0000", "#ff7f00", "#ffff00", "#00ff00", "#0000ff"];
-                        ctx.fillStyle = colors[r];
-                        ctx.fill();
-                        ctx.closePath();
+                    if(b.status == 1 && x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
+                        dy = -dy; b.status = 0; score += 10; scoreEl.innerText = "SCORE: "+score;
+                        if(score % 50 === 0) { dx = dx>0?dx+0.5:dx-0.5; dy = dy>0?dy+0.5:dy-0.5; }
+                        if(score == brickRowCount*brickColumnCount*10) { alert("¡GANASTE!"); document.location.reload(); }
                     }
                 }
             }
@@ -360,63 +227,51 @@
 
         function draw() {
             if(!gameRunning) return;
-
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawBricks();
-            drawBall();
-            drawPaddle();
-            collisionDetection();
-
-            if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
-                dx = -dx;
-            }
-            if(y + dy < ballRadius) {
-                dy = -dy;
-            } else if(y + dy > canvas.height-ballRadius) {
-                if(x > paddleX && x < paddleX + paddleWidth) {
-                    // Rebote con efecto según donde golpee la paleta
-                    let hitPoint = x - (paddleX + paddleWidth/2);
-                    dx = hitPoint * 0.15; 
-                    dy = -Math.abs(dy); // Asegurar que suba
-                } else {
-                    gameRunning = false;
-                    alert("GAME OVER - SCORE FINAL: " + score);
-                    resetGame();
-                    draw(); // Dibujar estado inicial
-                    return;
+            
+            // Dibujar ladrillos
+            for(let c=0; c<brickColumnCount; c++) {
+                for(let r=0; r<brickRowCount; r++) {
+                    if(bricks[c][r].status == 1) {
+                        let bx = (c*(brickWidth+brickPadding))+brickOffsetLeft;
+                        let by = (r*(brickHeight+brickPadding))+brickOffsetTop;
+                        bricks[c][r].x = bx; bricks[c][r].y = by;
+                        ctx.fillStyle = ["#ff0000","#ff7f00","#ffff00","#00ff00","#0000ff"][r];
+                        ctx.fillRect(bx, by, brickWidth, brickHeight);
+                    }
                 }
             }
 
-            x += dx;
-            y += dy;
+            // Bola y Paleta
+            ctx.beginPath(); ctx.arc(x, y, ballRadius, 0, Math.PI*2); ctx.fillStyle="#00f3ff"; ctx.fill(); ctx.closePath();
+            ctx.fillStyle="#ff00ff"; ctx.shadowBlur=10; ctx.shadowColor="#ff00ff"; 
+            ctx.fillRect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight); ctx.shadowBlur=0;
 
-            if(rightPressed && paddleX < canvas.width-paddleWidth) {
-                paddleX += 7;
-            }
-            else if(leftPressed && paddleX > 0) {
-                paddleX -= 7;
+            collisionDetection();
+
+            if(x+dx > canvas.width-ballRadius || x+dx < ballRadius) dx = -dx;
+            if(y+dy < ballRadius) dy = -dy;
+            else if(y+dy > canvas.height-ballRadius) {
+                if(x > paddleX && x < paddleX+paddleWidth) { dx = (x-(paddleX+paddleWidth/2))*0.15; dy = -Math.abs(dy); }
+                else { gameRunning=false; alert("GAME OVER - SCORE: "+score); resetGame(); draw(); return; }
             }
 
-            animationId = requestAnimationFrame(draw);
+            x += dx; y += dy;
+            if(rightPressed && paddleX < canvas.width-paddleWidth) paddleX += 7;
+            if(leftPressed && paddleX > 0) paddleX -= 7;
+            requestAnimationFrame(draw);
         }
 
-        function startGame() {
-            if(gameRunning) return;
-            resetGame();
-            gameRunning = true;
-            draw();
-            canvas.focus();
-        }
-
-        // Dibujar pantalla inicial
+        function startGame() { if(gameRunning) return; resetGame(); gameRunning=true; draw(); }
+        
+        // Pantalla inicial
         resetGame();
-        drawBricks();
-        drawPaddle();
-        ctx.font = "20px 'Press Start 2P'";
-        ctx.fillStyle = "white";
-        ctx.textAlign = "center";
-        ctx.fillText("PRESS START", canvas.width/2, canvas.height/2);
-
+        for(let c=0;c<brickColumnCount;c++) for(let r=0;r<brickRowCount;r++) {
+            let bx=(c*(brickWidth+brickPadding))+brickOffsetLeft, by=(r*(brickHeight+brickPadding))+brickOffsetTop;
+            ctx.fillStyle=["#ff0000","#ff7f00","#ffff00","#00ff00","#0000ff"][r]; ctx.fillRect(bx,by,brickWidth,brickHeight);
+        }
+        ctx.fillStyle="#ff00ff"; ctx.fillRect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
+        ctx.font="20px 'Press Start 2P'"; ctx.fillStyle="white"; ctx.textAlign="center"; ctx.fillText("PRESS START", canvas.width/2, canvas.height/2);
     </script>
 </body>
 </html>
